@@ -4,7 +4,6 @@ end
 
 
 function constraint_power_balance(pm::_PM.AbstractActivePowerModel, n::Int, i::Int, bus_arcs, bus_arcs_dc, bus_arcs_sw, bus_gens, bus_storage, bus_loads, bus_shunts)
-    vm   = var(pm, n, :vm, i)
     p    = get(_PM.var(pm, n),    :p, Dict()); _PM._check_var_keys(p, bus_arcs, "active power", "branch")
     pg   = get(_PM.var(pm, n),   :pg, Dict()); _PM._check_var_keys(pg, bus_gens, "active power", "generator")
     pd   = get(_PM.var(pm, n),   :pd, Dict()); _PM._check_var_keys(pd, bus_loads, "active power", "load")
@@ -21,7 +20,7 @@ function constraint_power_balance(pm::_PM.AbstractActivePowerModel, n::Int, i::I
         sum(pg[g] for g in bus_gens)
         - sum(ps[s] for s in bus_storage)
         - sum(pd[d] for d in bus_loads)
-        - sum(gs[s] for s in bus_shunts)*vm^2
+        - sum(gs[s] for s in bus_shunts)
     )
 
     if _IM.report_duals(pm)
@@ -30,11 +29,15 @@ function constraint_power_balance(pm::_PM.AbstractActivePowerModel, n::Int, i::I
 end
 
 
-function constraint_ohms_y_oltc_from(pm::AbstractActivePowerModel, n::Int, f_bus, t_bus, f_idx, t_idx, g, b, g_fr, b_fr)
-    _PM.constraint_ohms_y_from(pm, n, f_bus, t_bus, f_idx, t_idx, g, b, g_fr, b_fr)
+function constraint_ohms_y_oltc_from(pm::AbstractActivePowerModel, n::Int, f_bus, t_bus, f_idx, t_idx, g, b, g_fr, b_fr)    
+    p_fr  = var(pm, n,  :p, f_idx)
+    va_fr = var(pm, n, :va, f_bus)
+    va_to = var(pm, n, :va, t_bus)
+
+    JuMP.@constraint(pm.model, p_fr == -b*(va_fr - va_to))
 end
 
 
 function constraint_ohms_y_oltc_to(pm::AbstractActivePowerModel, n::Int, f_bus, t_bus, f_idx, t_idx, g, b, g_fr, b_fr)
-    _PM.constraint_ohms_y_to(pm, n, f_bus, t_bus, f_idx, t_idx, g, b, g_fr, b_fr)
+    # nothing becuase simetric model
 end

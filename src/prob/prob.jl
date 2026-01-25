@@ -33,10 +33,7 @@ function build_prob(pm::AbstractPowerModel)
     end
     
     for (i, load) in ref(pm, :load)
-        pd = var(pm, :pd, i)
-        qd = var(pm, :qd, i)
-        fix(pd, load["pd"]; force=true)
-        fix(qd, load["qd"]; force=true)
+        constraint_fixed_load_power(pm, i)        
     end
 
     for i in ids(pm, :branch)
