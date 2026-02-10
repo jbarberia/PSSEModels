@@ -20,5 +20,8 @@ module PSSEModels
     export psspy    
     export set_start_values!    
     export run_prob
+    export ref_add_area_info!
+    export ref_add_zone_info!
+    export ref_add_owner_info!
     
 end # model
