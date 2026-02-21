@@ -14,6 +14,16 @@ end
 
 
 function build_prob(pm::AbstractPowerModel)
+    variable_standard_psse!(pm)
+    
+    constraint_standard_psse_branch!(pm)
+    constraint_standard_psse_voltage!(pm)
+    constraint_standard_psse_bus!(pm)
+    constraint_standard_psse_dcline!(pm)
+end
+
+
+function variable_standard_psse!(pm::AbstractPowerModel)
     _PM.variable_bus_voltage(pm, bounded = false)
     _PM.variable_gen_power(pm, bounded = false)
     _PM.variable_branch_power(pm, bounded = false)
@@ -21,12 +31,23 @@ function build_prob(pm::AbstractPowerModel)
     PSSEModels.variable_load_power(pm, bounded = false)
     PSSEModels.variable_shunt_admitance(pm, bounded = true)
     _PM.variable_dcline_power(pm, bounded = false)
+end
 
+
+function constraint_standard_psse_branch!(pm::AbstractPowerModel)
     for (i, brn) in ref(pm, :branch)        
         tm = var(pm, :tm, i)
         fix(tm, brn["tap"]; force=true)
     end
 
+    for i in ids(pm, :branch)
+        PSSEModels.constraint_ohms_y_oltc_from(pm, i)
+        PSSEModels.constraint_ohms_y_oltc_to(pm, i)
+    end
+end
+
+
+function constraint_standard_psse_voltage!(pm::AbstractPowerModel)
     for (i, shunt) in ref(pm, :shunt)
         bs = var(pm, :bs, i)
         fix(bs, shunt["bs"]; force=true)
@@ -36,13 +57,11 @@ function build_prob(pm::AbstractPowerModel)
         constraint_fixed_load_power(pm, i)        
     end
 
-    for i in ids(pm, :branch)
-        PSSEModels.constraint_ohms_y_oltc_from(pm, i)
-        PSSEModels.constraint_ohms_y_oltc_to(pm, i)
-    end
-
     constraint_model_voltage(pm)
+end
 
+
+function constraint_standard_psse_bus!(pm::AbstractPowerModel)
     for (i,bus) in ref(pm, :ref_buses)
         @assert bus["bus_type"] == 3
         constraint_theta_ref(pm, i)
@@ -71,8 +90,10 @@ function build_prob(pm::AbstractPowerModel)
             end
         end
     end
+end
 
 
+function constraint_standard_psse_dcline!(pm::AbstractPowerModel)
     for (i,dcline) in ref(pm, :dcline)
         #constraint_dcline_power_losses(pm, i) not needed, active power flow fully defined by dc line setpoints
         constraint_dcline_setpoint_active(pm, i)
@@ -87,6 +108,5 @@ function build_prob(pm::AbstractPowerModel)
             constraint_voltage_magnitude_setpoint(pm, t_bus["index"])
         end
     end
-
 end
 

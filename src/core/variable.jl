@@ -1,9 +1,19 @@
+"""
+    variable_load_power(pm::AbstractPowerModel; kwargs...)
+
+Creates real and reactive load power variables.
+"""
 function variable_load_power(pm::AbstractPowerModel; kwargs...)
     variable_load_power_real(pm; kwargs...)
     variable_load_power_imag(pm; kwargs...)
 end
 
 
+"""
+    variable_load_power_real(pm::AbstractPowerModel; nw::Int=nw_id_default, bounded::Bool=true, report::Bool=true)
+
+Creates real load power variables `pd` for each load in the network.
+"""
 function variable_load_power_real(pm::AbstractPowerModel; nw::Int=nw_id_default, bounded::Bool=true, report::Bool=true)
     pd = var(pm, nw)[:pd] = JuMP.@variable(pm.model,
         [i in ids(pm, nw, :load)], base_name="$(nw)_pd",
@@ -21,6 +31,11 @@ function variable_load_power_real(pm::AbstractPowerModel; nw::Int=nw_id_default,
 end
 
 
+"""
+    variable_load_power_imag(pm::AbstractPowerModel; nw::Int=nw_id_default, bounded::Bool=true, report::Bool=true)
+
+Creates reactive load power variables `qd` for each load in the network.
+"""
 function variable_load_power_imag(pm::AbstractPowerModel; nw::Int=nw_id_default, bounded::Bool=true, report::Bool=true)
     qd = var(pm, nw)[:qd] = JuMP.@variable(pm.model,
         [i in ids(pm, nw, :load)], base_name="$(nw)_qd",
@@ -38,6 +53,11 @@ function variable_load_power_imag(pm::AbstractPowerModel; nw::Int=nw_id_default,
 end
 
 
+"""
+    variable_shunt_admitance(pm::AbstractPowerModel; nw::Int=nw_id_default, bounded::Bool=true, report::Bool=true)
+
+Creates shunt susceptance variables `bs` for each shunt in the network.
+"""
 function variable_shunt_admitance(pm::AbstractPowerModel; nw::Int=nw_id_default, bounded::Bool=true, report::Bool=true)
     bs = var(pm, nw)[:bs] = JuMP.@variable(pm.model,
         [i in ids(pm, nw, :shunt)], base_name="$(nw)_bs",
