@@ -1,5 +1,9 @@
 
+"""
+    ref_add_area_info!(ref::Dict{Symbol,<:Any}, data::Dict{String,<:Any})
 
+Extends the PowerModels reference dictionary with PSS/E area information.
+"""
 function ref_add_area_info!(ref::Dict{Symbol,<:Any}, data::Dict{String,<:Any})
     apply_pm!(_ref_add_area_info!, ref, data; apply_to_subnetworks = true)
 end
@@ -31,6 +35,11 @@ function _ref_add_area_info!(ref::Dict{Symbol,<:Any}, data::Dict{String,<:Any})
 end
 
 
+"""
+    ref_add_zone_info!(ref::Dict{Symbol,<:Any}, data::Dict{String,<:Any})
+
+Extends the PowerModels reference dictionary with PSS/E zone information.
+"""
 function ref_add_zone_info!(ref::Dict{Symbol,<:Any}, data::Dict{String,<:Any})
     apply_pm!(_ref_add_zone_info!, ref, data; apply_to_subnetworks = true)
 end
@@ -62,6 +71,11 @@ function _ref_add_zone_info!(ref::Dict{Symbol,<:Any}, data::Dict{String,<:Any})
 end
 
 
+"""
+    ref_add_owner_info!(ref::Dict{Symbol,<:Any}, data::Dict{String,<:Any})
+
+Extends the PowerModels reference dictionary with PSS/E owner information.
+"""
 function ref_add_owner_info!(ref::Dict{Symbol,<:Any}, data::Dict{String,<:Any})
     apply_pm!(_ref_add_owner_info!, ref, data; apply_to_subnetworks = true)
 end

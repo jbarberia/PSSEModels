@@ -38,6 +38,11 @@ function constraint_ohms_y_oltc_from(pm::AbstractActivePowerModel, n::Int, f_bus
 end
 
 
+"""
+    constraint_ohms_y_oltc_to(pm::AbstractActivePowerModel, n::Int, f_bus, t_bus, f_idx, t_idx, g, b, g_fr, b_fr)
+
+Symmetric active power model, no additional constraints required for the "to" side of the branch.
+"""
 function constraint_ohms_y_oltc_to(pm::AbstractActivePowerModel, n::Int, f_bus, t_bus, f_idx, t_idx, g, b, g_fr, b_fr)
-    # nothing becuase simetric model
+    # nothing because symmetric model
 end

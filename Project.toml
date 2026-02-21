@@ -4,6 +4,7 @@ authors = ["Juan Luis Barberia <50841177+jbarberia@users.noreply.github.com>"]
 version = "0.1.0"
 
 [deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
 PSSE2PowerModels = "9e052817-6d02-48d2-a14c-d9a445c7d635"
 PowerModels = "c36e90e8-916a-50a6-bd94-075b64ef4655"

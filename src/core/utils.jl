@@ -1,3 +1,9 @@
+"""
+    set_start_values!(data::Dict{String, Any})
+
+Initializes start values for PowerModels variables (va, vm, pg, qg, etc.) 
+based on the current values in the PSS/E case.
+"""
 function set_start_values!(data::Dict{String, Any})
 for (i,bus) in data["bus"]
         bus["va_start"] = bus["va"]
