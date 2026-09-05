@@ -10,7 +10,7 @@ optimizer = JuMP.optimizer_with_attributes(
     "tol"=>1e-4,
     "max_iter"=>200,
     "print_level"=>5,
-    "nlp_scaling_method"=>"none",
+    "nlp_scaling_method"=>"none", # No es necesario en version 64 bits
 )
 
 include("powerflow.jl")
